@@ -7,7 +7,7 @@ import click
 from flask_migrate import Migrate
 
 from app import create_app
-from api.models.BaseModel import db
+from api.models import db, Role, User
 
 app = create_app(environment=os.environ.get('APP_SETTINGS', 'Development'))
 migrate = Migrate(app, db)

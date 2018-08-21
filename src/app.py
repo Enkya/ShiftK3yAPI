@@ -3,7 +3,7 @@
 from flask import Flask, jsonify
 from flask_restplus import Api
 
-from api.models.BaseModel import db
+from api.models import db
 try:
     from .config import Configuration
 except ImportError:

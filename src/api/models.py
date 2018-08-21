@@ -4,8 +4,11 @@ from datetime import datetime
 
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import SQLAlchemyError
+from flask_bcrypt import Bcrypt
 
 db = SQLAlchemy()
+bcrypt = Bcrypt()
+
 
 def generate_uuid():
     """ Generate unique string """
@@ -99,5 +102,31 @@ class Base(db.Model):
         }
         return dictionary_mapping
 
+class Role(Base):
+    """Models Roles to which all employees have."""
 
-    
+    __tablename__ = 'roles'
+    users = db.relationship('User', secondary='user_role', lazy='dynamic',
+                            backref=db.backref('roles', lazy='dynamic'))
+
+class User(Base):
+    """ User Model """
+    __tablename__ = 'users'
+    name = db.Column(db.String, nullable=False)
+    email = db.Column(db.String, nullable=False, unique=True)
+    _password_hash = db.Column(db.String)
+
+    @property
+    def password(self):
+        return 'Password: Write Only'
+
+    @password.setter
+    def password(self, password):
+        """ Generate password hash """
+        self._password_hash = bcrypt.generate_password_hash(
+            password, 4
+        ).decode('utf-8')
+
+    def verify_password(self, password):
+        """ Check if the provided password matches the user password """
+        return bcrypt.check_password_hash(self._password_hash, password)

@@ -11,6 +11,8 @@ flask-migrate = "*"
 flask-sqlalchemy = "*"
 "flask-psycopg2" = "*"
 flask-bcrypt = "*"
+autoenv = "*"
+"psycopg2-binary" = "*"
 
 [dev-packages]
 
